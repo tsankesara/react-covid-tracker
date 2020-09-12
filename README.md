@@ -1,5 +1,9 @@
 ## Descriptions
 
+### Deployed At Firebase!
+https://covid-19-tracker-tsankesara.web.app/
+
+
 ### `npm start`
 
 Runs the app in the development mode.<br />
