@@ -5,7 +5,7 @@ import Map from "./Map";
 import Table from "./Table";
 import LineGraph from "./LineGraph";
 import { sortData } from "./util";
-
+import "leaflet/dist/leaflet.css";
 import {
     FormControl,
     Select,
@@ -14,13 +14,21 @@ import {
     CardContent,
 } from "@material-ui/core";
 
-//TIMESTAMP: 2:50
-// https://youtu.be/cF3pIMJUZxM?t=10499
+//TIMESTAMP: 3:27
+// https://youtu.be/cF3pIMJUZxM?t=12446
 function App() {
     const [countries, setCountries] = useState([]);
     const [country, setCountry] = useState("worldwide");
     const [countryInfo, setCountryInfo] = useState({});
     const [TableData, setTableData] = useState([]);
+    const [mapCenter, setMapCenter] = useState({
+        lat: 34.80746,
+        lng: -40.4796,
+    });
+    const [mapCountries, setmapCountries] = useState([]);
+    const [mapZoom, setMapZoom] = useState(4);
+    const [casesType, setCasesType] = useState("cases");
+
     useEffect(() => {
         fetch("https://disease.sh/v3/covid-19/all")
             .then((res) => res.json())
@@ -45,6 +53,7 @@ function App() {
                     const sortedData = sortData(data);
                     setTableData(sortedData);
                     setCountries(countries);
+                    setmapCountries(data);
                 });
         };
         getCountriesData();
@@ -63,6 +72,7 @@ function App() {
             .then((data) => {
                 setCountry(countryCode);
                 setCountryInfo(data);
+                setMapCenter([data.countryInfo.lat, data.countryInfo.long]);
             });
     };
     return (
@@ -105,7 +115,12 @@ function App() {
                         total={countryInfo.deaths}
                     />
                 </div>
-                <Map />
+                <Map
+                    center={mapCenter}
+                    zoom={mapZoom}
+                    countries={mapCountries}
+                    casesType={casesType}
+                />
             </div>
 
             <Card className="app__right">
@@ -117,14 +132,6 @@ function App() {
                 </CardContent>
             </Card>
         </div>
-
-        // {Infobox}
-        // {Infobox}
-        // {Infobox}
-
-        // TABLE
-        //GRAPH
-
         //MAP
     );
 }
